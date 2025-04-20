@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-    DOCKER_USERNAME = credentials('docker-username')
-    DOCKER_PASSWORD = credentials('docker-password')
-}
+        DOCKER_USERNAME = credentials('docker-username')
+        DOCKER_PASSWORD = credentials('docker-password')
+    }
 
     stages {
         stage('Checkout') {
@@ -26,15 +26,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t $DOCKER_USERNAME/feedback-app:latest .'
+                bat 'docker build -t %DOCKER_USERNAME%/feedback-app:latest .'
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 bat '''
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                    docker push $DOCKER_USERNAME/feedback-app:latest
+                    echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
+                    docker push %DOCKER_USERNAME%/feedback-app:latest
                 '''
             }
         }
