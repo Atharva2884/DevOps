@@ -26,15 +26,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t $DOCKERHUB_USERNAME/feedback-app:latest .'
+                bat 'docker build -t $DOCKER_USERNAME/feedback-app:latest .'
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 bat '''
-                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-                    docker push $DOCKERHUB_USERNAME/feedback-app:latest
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker push $DOCKER_USERNAME/feedback-app:latest
                 '''
             }
         }
