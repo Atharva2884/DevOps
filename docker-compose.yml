@@ -1,8 +1,14 @@
+#version: '3'
+#services:
+ # flaskapp:
+  #  build: .
+    #ports:
+     # - "5000:5000"
+    #volumes:
+      #- .:/app
 version: '3'
 services:
-  flaskapp:
+  web:
     build: .
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app
