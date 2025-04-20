@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USERNAME = credentials('atharva')
+        DOCKERHUB_USERNAME = credentials('atharva.urankar@vit.edu.in')
         DOCKERHUB_PASSWORD = credentials('123456789')
     }
 
