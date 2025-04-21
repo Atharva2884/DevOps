@@ -3,12 +3,19 @@ pipeline {
     environment {
         DOCKER_USERNAME = credentials('docker-username')
         DOCKER_PASSWORD = credentials('docker-password')
+        BUILD_NUMBER = "${env.BUILD_NUMBER}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Atharva2884/DevOps.git'
+                // Use the checkout step to ensure clean clone
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [[$class: 'CleanBeforeCheckout']], 
+                    userRemoteConfigs: [[url: 'https://github.com/Atharva2884/DevOps.git']]
+                ])
             }
         }
 
@@ -26,7 +33,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_USERNAME%/feedback-app:latest .'
+                // Add --no-cache to force rebuilding
+                bat 'docker build --no-cache -t %DOCKER_USERNAME%/feedback-app:latest -t %DOCKER_USERNAME%/feedback-app:%BUILD_NUMBER% .'
             }
         }
 
@@ -35,6 +43,7 @@ pipeline {
                 bat '''
                     echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
                     docker push %DOCKER_USERNAME%/feedback-app:latest
+                    docker push %DOCKER_USERNAME%/feedback-app:%BUILD_NUMBER%
                 '''
             }
         }
